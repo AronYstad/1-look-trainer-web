@@ -9,20 +9,82 @@ let nNS = 131;
 let moves = ["R", "R'", "L", "L'", "U", "U'", "B", "B'"]
 let nRandMoves = 1;
 let cases = {
-    "basic-insert": "abc123"
+    "basic-insert": "L' U' L"
 };
 
 function mainLoop(){
-    nsCase = scrambles[randInt(nNS)];
-    scram = nsCase[randInt(nsCase.length)];
-    console.log(scram);
+    let nsCase = scrambles[randInt(nNS)];
+    let scram = nsCase[randInt(nsCase.length)];
+    let layerCase = selected[randInt(selected.length)];
+    let layerScram = cases[layerCase];
+    scram = scram + " " + layerScram;
+    for(i = 0; i < nRandMoves; i++){
+        let lastMove = "";
+        let randMove = "";
+        if(i > 0){
+            if(scram.at(-1) === "'"){
+                lastMove = scram.at(-2);
+            }
+            else{
+                lastMove = scram.at(-1);
+            }
+            randMove = lastMove;
+        }
+        randMove = moves[randInt(moves.length)];
+        while(randMove[0] === lastMove){
+            randMove = moves[randInt(moves.length)];
+        }
+        scram = scram + " " + randMove;
+    }
+    moves = scram.split(" ");
+    shortening = true;
+    while(shortening){
+        shortening = false;
+        for(i = moves.length-1; i > 0; i--){
+            if(moves[i].length === 2 && moves[i][1] === "'"){ // R'
+                if(moves[i-1] === moves[i]){ // R' R' = R
+                    let move = moves[i];
+                    moves.splice(i-1, 2, move[0]);
+                    shortening = true;
+                    break;
+                }
+                else if(moves[i-1] === moves[i][0]){ // R R' = 1
+                    moves.splice(i-1, 2);
+                    shortening = true;
+                    break;
+                }
+            }
+            else{ // R
+                if(moves[i-1] === moves[i]){ // R R = R'
+                    let move = moves[i];
+                    moves.splice(i-1, 2, move+"'");
+                    shortening = true;
+                    break;
+                }
+                else if(moves[i-1][0] === moves[i]){ // R' R = 1
+                    moves.splice(i-1, 2);
+                    shortening = true;
+                    break;
+                }
+            }
+        }
+    }
+    scram = "";
+    for(m of moves){
+        if(scram === ""){
+            scram = m;
+        }
+        else{
+            scram = scram + " " + m;
+        }
+    }
+    firstH2.textContent = scram;
 }
 
 async function loadData(){
     const response = await fetch("./scrambles.json");
     data = await response.json();
     scrambles = Object.values(data);
-    mainLoop();
 }
 
 function randInt(max){
@@ -33,12 +95,13 @@ loadData();
 
 submitButton.addEventListener("click", () => {
     caseList.style = "display: none";
-    submitButton.style = "display: none";
     randMovesSelect.style = "display: none";
     secondH2.style = "display: none";
     training = true;
 
     firstH2.textContent = "";
+    submitButton.textContent = "Next";
+    mainLoop();
 });
 
 selected = [];
