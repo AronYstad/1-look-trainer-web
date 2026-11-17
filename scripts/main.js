@@ -16,4 +16,3 @@ for(let button of document.getElementsByClassName("case-button")){
         }
     })
 }
-    
