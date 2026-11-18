@@ -7,16 +7,31 @@ let training = false;
 let scrambles = []
 let nNS = 131;
 let moves = ["R", "R'", "L", "L'", "U", "U'", "B", "B'"]
-let nRandMoves = 1;
+let nRandMoves = 0;
 let cases = {
-    "basic-insert": "L' U' L"
+    "basic-insert": ["L' U' L", "R U R'"],
+    "alt": ["L' U' L B R' L'", "R U R' B' L R"],
+    "awkward": ["L' U' L B' R", "R U R' B L'"],
+    "double-back": ["L R' L U'"],
+    "double-insert": ["L B R' L' R' U"],
+    "double-side": ["U B' L' U"],
+    "long-insert": ["L' U' L'", "R U R"],
+    "nightmare": ["R U R' B' R' B'", "L' U' L B L B"],
+    "rurprime": ["B L' B'", "B' R B"],
+    "side-insert": ["B U' R'", "B' U L"],
+    "sledge": ["L R' L' B", "B' U L U'"],
+    "topside": ["B U' R", "R' L R'"],
+    "twist": ["L' U' L B", "R U R' B'"],
+    "uprimeru": ["U' B' R", "U B L'"],
+    "zig-zag": ["R' U' B L"]
 };
 
 function mainLoop(){
     let nsCase = scrambles[randInt(nNS)];
     let scram = nsCase[randInt(nsCase.length)];
     let layerCase = selected[randInt(selected.length)];
-    let layerScram = cases[layerCase];
+    let layerArray = cases[layerCase];
+    let layerScram = layerArray[randInt(layerArray.length)];
     scram = scram + " " + layerScram;
     for(i = 0; i < nRandMoves; i++){
         let lastMove = "";
@@ -101,6 +116,7 @@ submitButton.addEventListener("click", () => {
 
     firstH2.textContent = "";
     submitButton.textContent = "Next";
+    nRandMoves = Math.max(Math.min(randMovesSelect.value, 10), 0);
     mainLoop();
 });
 
