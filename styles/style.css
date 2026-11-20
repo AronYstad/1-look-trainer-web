@@ -31,6 +31,10 @@ input {
     font-size: 3em;
 }
 
+#custom-layer-input{
+    width: 30rem;
+}
+
 button {
     display: block;
     margin: 1rem auto;

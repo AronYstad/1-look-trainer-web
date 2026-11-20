@@ -3,6 +3,8 @@ let submitButton = document.getElementById("submit-button");
 let randMovesSelect = document.getElementById("rand-moves-select");
 let secondH2 = document.getElementById("second-h2");
 let firstH2 = document.getElementById("first-h2");
+let thirdH2 = document.getElementById("third-h2");
+let customLayerInput = document.getElementById("custom-layer-input");
 let training = false;
 let scrambles = []
 let nNS = 131;
@@ -25,14 +27,17 @@ let cases = {
     "uprimeru": ["U' B' R", "U B L'"],
     "zig-zag": ["R' U' B L"]
 };
+let selected = [];
+let selectedLayers = [];
 
 function mainLoop(){
     let nsCase = scrambles[randInt(nNS)];
     let scram = nsCase[randInt(nsCase.length)];
-    let layerCase = selected[randInt(selected.length)];
-    let layerArray = cases[layerCase];
-    let layerScram = layerArray[randInt(layerArray.length)];
-    scram = scram + " " + layerScram;
+    if(selectedLayers.length !== 0){
+        let layerArray = selectedLayers[randInt(selectedLayers.length)];
+        let layerScram = layerArray[randInt(layerArray.length)];
+        scram = scram + " " + layerScram;
+    }
     for(i = 0; i < nRandMoves; i++){
         let lastMove = "";
         let randMove = "";
@@ -112,15 +117,27 @@ submitButton.addEventListener("click", () => {
     caseList.style = "display: none";
     randMovesSelect.style = "display: none";
     secondH2.style = "display: none";
+    thirdH2.style = "display: none";
+    customLayerInput.style = "display: none";
     training = true;
 
     firstH2.textContent = "";
     submitButton.textContent = "Next";
+    let customLayers = customLayerInput.value;
+    for(layer of selected){
+        selectedLayers.push(cases[layer]);
+    }
+    if(customLayers !== ""){
+        for(layer of customLayers.split(",")){
+            layer = layer.trim();
+            selectedLayers.push([layer]);
+        }
+    }
+    
     nRandMoves = Math.max(Math.min(randMovesSelect.value, 10), 0);
     mainLoop();
 });
 
-selected = [];
 if(localStorage.getItem("selected")){
     selected = JSON.parse(localStorage.getItem("selected"));
     for(button of document.getElementsByClassName("case-button")){
