@@ -4,25 +4,29 @@ body{
     color: white;
 }
 
+*{
+    box-sizing: border-box;
+}
+
 #case-list{
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(5, minmax(0,1fr));
     margin: 0 auto;
-    width: 80%
+    width: 80%;
+    align-items: stretch;
 }
 
 .case-button{
     border: 1px solid white;
-    /*background-color: rgb(0, 0, 153);*/
 }
 
 .case-button img{
-    width: 80%
+    width: 80%;
 }
 
 .case-button p{
-    font-size: 2em;
+    font-size: 3vw;
 }
 
 input {
