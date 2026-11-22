@@ -1,5 +1,5 @@
 # 1-look trainer
-## Link to website: https://aronystad.github.io/1-look-trainer-web/
+Link to website: https://aronystad.github.io/1-look-trainer-web/
 
 A simple skewb trainer that lets you practice 1-look patterns with a number of random moves added to the end.
 
